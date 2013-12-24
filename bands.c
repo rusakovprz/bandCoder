@@ -44,3 +44,21 @@ void init_band_to_pin_tables()
 }
 
 
+void init_out_pins()
+{
+
+  int index;
+
+  for(index=0; index<sizeof(band_to_pin_tables); ++index)
+  {
+    // задаём режим
+    band_to_pin_tables[index].regisrt |= 1 << band_to_pin_tables[index].pin;
+
+    // выставляем низкий уровень
+    band_to_pin_tables[index].io_port &= ~( 1 << band_to_pin_tables[index].pin );
+  }
+
+}
+
+
+

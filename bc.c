@@ -56,6 +56,7 @@ void main_loop()
 main()
 {
   init_band_to_pin_tables();
+  init_out_pins();
   
   init_PB5();
   main_loop();             
