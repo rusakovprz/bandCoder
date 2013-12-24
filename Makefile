@@ -1,10 +1,12 @@
 
-compile : bc.c
-	avr-gcc -mmcu=atmega168 -Os bc.c -o bc.o
-	avr-objcopy -j .text -j .data -O ihex bc.o bc.hex
+compile : bc.c bands.c
+	avr-gcc -c -mmcu=atmega168 -Os bc.c -o bc.o 
+	avr-gcc -c -mmcu=atmega168 -Os bands.c -o bands.o
+	avr-gcc -mmcu=atmega168 -Os bands.o bc.o -o obj.o
+	avr-objcopy -j .text -j .data -O ihex obj.o bc.hex
 
 clean:
-	rm -f bc.o
+	rm -f *.o
 
 distclean: clean
 	rm -f bc.hex
