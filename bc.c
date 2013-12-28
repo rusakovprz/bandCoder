@@ -12,6 +12,7 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include "bands.h"
+#include "uart.h"
 
 // TODO: эта константа зависит от частоты кварцевого резонатора.
 // 34286 - для 16 мГц. и 16 разрядного таймера
@@ -57,7 +58,8 @@ main()
 {
   init_band_to_pin_tables();
   init_out_pins();
-  
+  init_uart();  
+    
   init_PB5();
   main_loop();             
 }
