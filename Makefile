@@ -28,7 +28,7 @@ distclean: clean
 	rm -f bc.hex
 
 prog: bc.hex
-	avrdude -p m328p -b 9600 -P $(SERIAL_PORT) -c dasa -U flash ./bc.hex
+	avrdude -p m328p -b 9600 -P $(SERIAL_PORT) -c dasa -U flash:w:bc.hex:i
 
 #c2n232i	serial port banging, reset=dtr sck=!rts mosi=!txd miso=!cts
 #dapa		Direct AVR Parallel Access cable
