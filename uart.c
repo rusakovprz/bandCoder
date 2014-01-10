@@ -6,9 +6,17 @@
   
 */
 
+#define max_len_buffer_receiver 40
+
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include "uart.h"
+
+// приёмный буфер
+char buffer_receiver[max_len_buffer_receiver];
+
+// индекс  очередного "свободного" элемента приёмного буфера 
+int index_item_receiver;
 
 
 void init_uart()
@@ -34,12 +42,47 @@ void init_uart()
   // Разрешение прерывания по завершению приема, по освобождению регистра данных передтчика.
   UCSR0B |= ( 1 << RXCIE0 ) | ( 1 << UDRIE0 );
 
+  index_item_receiver = 0;
 }
 
 
 ISR( USART_RX_vect )
 {
+  /*
+    + принять очередной символ
+    + проверить на равенсво символу ';' код 0x3B
+    + проверить на переполнение приёмного буфера
+    + проверить, что в буфере лежит ответ 'IF' (0x49 0x46)
+    - байты буфера с 6-10 включительно перевести из строки в целое число 
+      ( частота в килогерцах см. файл bands.h )
+    - сравнить частоту со значениями границ диапазонов и установить
+      соответсвующий диапзон ( bands.h void set_band(int band_code); )
+     
+  */
 
+  char rxbyte = UDR0;
+  buffer_receiver[index_item_receiver] = rxbyte;
+  
+  if ( rxbyte == ';')
+  {
+    // принят пакет, парсим
+    if (buffer_receiver[index_item_receiver] == 'I' &&
+        buffer_receiver[index_item_receiver] == 'F')
+    {
+
+
+    } else return;
+
+  } 
+    else
+    { 
+      // проверяем на переполнение буфера  
+      if (index_item_receiver >= max_len_buffer_receiver)
+      {
+        index_item_receiver = 0;
+        return;
+      }
+    }
 }
 
 
@@ -48,17 +91,4 @@ ISR( USART_UDRE_vect )
 
 }
 
-
-int get_ch()
-{
-
-
-}
-
-
-void put_string()
-{
-
-
-}
 
