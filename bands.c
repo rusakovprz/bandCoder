@@ -61,7 +61,7 @@ void init_out_pins()
     band_to_pin_tables[index].regisrt |= 1 << band_to_pin_tables[index].pin;
 
     // выставляем низкий уровень
-    band_to_pin_tables[index].out_port &= ~( 1 << band_to_pin_tables[index].pin );
+    band_to_pin_tables[index].out_port |= ( 1 << band_to_pin_tables[index].pin );
   }
 
 }
@@ -115,10 +115,10 @@ void set_band(int band_code)
 
   if(index_new_band != index_current_band)
   {
-    if(index_current_band < 0)
-      band_to_pin_tables[index_current_band].out_port &= ~( 1 << band_to_pin_tables[index_current_band].pin );
+    if(index_current_band >= 0)
+      band_to_pin_tables[index_current_band].out_port |= ( 1 << band_to_pin_tables[index_current_band].pin );
 
-    band_to_pin_tables[index_new_band].out_port |= ( 1 << band_to_pin_tables[index_new_band].pin );      
+    band_to_pin_tables[index_new_band].out_port &= ~( 1 << band_to_pin_tables[index_new_band].pin );      
   }
 }
 
