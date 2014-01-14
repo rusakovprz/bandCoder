@@ -60,7 +60,7 @@ void init_out_pins()
     // задаём режим
     band_to_pin_tables[index].regisrt |= 1 << band_to_pin_tables[index].pin;
 
-    // выставляем низкий уровень
+    // выставляем Высокий уровень
     band_to_pin_tables[index].out_port |= ( 1 << band_to_pin_tables[index].pin );
   }
 

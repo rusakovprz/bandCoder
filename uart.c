@@ -11,6 +11,7 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include "uart.h"
+#include "bands.h"
 
 // приёмный буфер
 char buffer_receiver[max_len_buffer_receiver];
@@ -22,10 +23,10 @@ int index_item_receiver;
 void init_uart()
 {
   
-  // Для частоты микроконтроллера 20МГц и скорости 9600 
+  // Для частоты микроконтроллера 16МГц и скорости 9600 
   // в регистр скорости следует записать значение 129. 
-  UBRR0L = 129;
-  UBRR0H = 129 >> 8;
+  UBRR0L = 103;
+  UBRR0H = 103 >> 8;
   
   // 8 бит данных.
   UCSR0C |= ( 1 << UMSEL01 ) | ( 0 << UCSZ02 ) | ( 1 << UCSZ01 ) | ( 1 << UCSZ00 );
@@ -46,6 +47,9 @@ void init_uart()
 }
 
 
+
+
+
 ISR( USART_RX_vect )
 {
   /*
@@ -59,18 +63,42 @@ ISR( USART_RX_vect )
       соответсвующий диапзон ( bands.h void set_band(int band_code); )
      
   */
-
+  
   char rxbyte = UDR0;
   buffer_receiver[index_item_receiver] = rxbyte;
   
   if ( rxbyte == ';')
   {
+    if( PINB & (1 << PB5) )
+    PORTB &= ~( 1 << PB5 );
+  else
+    PORTB |= ( 1 << PB5 );
+
+
     // принят пакет, парсим
-    if (buffer_receiver[index_item_receiver] == 'I' &&
-        buffer_receiver[index_item_receiver] == 'F')
+    if (buffer_receiver[0] == 'I' &&
+        buffer_receiver[1] == 'F')
     {
+      /* TODO:
+        - переписать блок операторов if
+        - вынести преобразование строки в число и проверку текущего диапазона 
+          в "бесконечный цикл" функции main. 
+      */
+      char tmp_string[6];
+      strlcpy(tmp_string, buffer_receiver[2], 5);   
 
+      int frequency = atoi(tmp_string);
 
+      if( 1830 > frequency > 1930) set_band(BAND_160);
+      if( 3500 > frequency > 3800) set_band(BAND_80);
+      if( 7000 > frequency > 7100) set_band(BAND_40); 
+      if( 10100 > frequency > 10150) set_band(BAND_30);
+      if( 14000 > frequency > 14350) set_band(BAND_20);
+      if( 18068 > frequency > 18168) set_band(BAND_17); 
+      if( 21000 > frequency > 21450) set_band(BAND_15);
+      if( 24890 > frequency > 24990) set_band(BAND_12);
+      if( 28800 > frequency > 29700) set_band(BAND_10);
+      
     } else return;
 
   } 

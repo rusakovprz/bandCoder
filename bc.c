@@ -26,11 +26,7 @@
 ISR( TIMER1_OVF_vect )
 {
   TCNT1 = TCNT1_INIT; //выставляем начальное значение TCNT1.
-  
-  if( PINB & (1 << PB5) )
-    PORTB &= ~( 1 << PB5 );
-  else
-    PORTB |= ( 1 << PB5 );
+  UDR0 = 0x3B;
 }
 
 
@@ -58,7 +54,7 @@ main()
 {
   init_band_to_pin_tables();
   init_out_pins();
-  init_uart();  
+  init_uart();
     
   init_PB5();
   main_loop();             
