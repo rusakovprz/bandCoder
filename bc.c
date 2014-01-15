@@ -26,7 +26,7 @@
 ISR( TIMER1_OVF_vect )
 {
   TCNT1 = TCNT1_INIT; //выставляем начальное значение TCNT1.
-  UDR0 = 0x3B;
+  send_string("IF;");
 }
 
 

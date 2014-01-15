@@ -7,9 +7,11 @@
 */
 
 #define max_len_buffer_receiver 40
+#define max_len_buffer_sender 4
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
+#include <string.h>
 #include "uart.h"
 #include "bands.h"
 
@@ -18,6 +20,12 @@ char buffer_receiver[max_len_buffer_receiver];
 
 // индекс  очередного "свободного" элемента приёмного буфера 
 int index_item_receiver;
+
+// прередающий буфер
+char buffer_sender[max_len_buffer_sender];
+
+// индекс  очередного элемента передающего буфера 
+int index_item_sender;
 
 
 void init_uart()
@@ -44,10 +52,20 @@ void init_uart()
   UCSR0B |= ( 1 << RXCIE0 ) | ( 1 << UDRIE0 );
 
   index_item_receiver = 0;
+  index_item_sender = -1;
 }
 
 
+void send_string(const char *in_string)
+{
+     
+  if( strlen(in_string) >= max_len_buffer_sender )
+    return;
 
+  strcpy(buffer_sender, in_string);
+  index_item_sender = 0;
+  UDR0 = buffer_sender[index_item_sender++];
+}
 
 
 ISR( USART_RX_vect )
@@ -85,7 +103,7 @@ ISR( USART_RX_vect )
           в "бесконечный цикл" функции main. 
       */
       char tmp_string[6];
-      strlcpy(tmp_string, buffer_receiver[2], 5);   
+      strlcpy(tmp_string, &buffer_receiver[2], 5);   
 
       int frequency = atoi(tmp_string);
 
@@ -116,7 +134,8 @@ ISR( USART_RX_vect )
 
 ISR( USART_UDRE_vect )
 {
-
+  if( buffer_sender[index_item_sender] != 0x00 )
+    UDR0 = buffer_sender[index_item_sender++];
 }
 
 
