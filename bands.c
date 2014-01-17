@@ -10,42 +10,41 @@
 void init_band_to_pin_tables()
 {
 
-  band_to_pin_tables[0].code_band= BAND_160;   // код диапазона
-  band_to_pin_tables[0].out_port = PORTD;     // порт ввода вывода на котором расположен пин соответствующий диапазону
-  band_to_pin_tables[0].in_port  = PIND;
-  band_to_pin_tables[0].pin      = PIND2;      // пин соответствующий диапазону
-  band_to_pin_tables[0].regisrt  = DDRD;   
+  band_to_pin_tables[0].code_band= BAND_160; // код диапазона
+  band_to_pin_tables[0].out_port = 0x2B;     // порт ввода вывода на котором расположен пин соответствующий диапазону
+  band_to_pin_tables[0].in_port  = 0x29;
+  band_to_pin_tables[0].pin      = PIND2;    // пин соответствующий диапазону
+  band_to_pin_tables[0].regisrt  = 0x2A;   
 
   band_to_pin_tables[1].code_band= BAND_80;
-  band_to_pin_tables[1].out_port = PORTD;
-  band_to_pin_tables[1].in_port  = PIND;
+  band_to_pin_tables[1].out_port = 0x2B;
+  band_to_pin_tables[1].in_port  = 0x29;
   band_to_pin_tables[1].pin      = PIND3;
-  band_to_pin_tables[1].regisrt  = DDRD;   
-
+  band_to_pin_tables[1].regisrt  = 0x2A;   
 
   band_to_pin_tables[2].code_band= BAND_40;
-  band_to_pin_tables[2].out_port = PORTD;
-  band_to_pin_tables[2].in_port  = PIND;
+  band_to_pin_tables[2].out_port = 0x2B;
+  band_to_pin_tables[2].in_port  = 0x29;
   band_to_pin_tables[2].pin      = PIND4;
-  band_to_pin_tables[2].regisrt  = DDRD;   
+  band_to_pin_tables[2].regisrt  = 0x2A;   
 
   band_to_pin_tables[3].code_band= BAND_20;
-  band_to_pin_tables[3].out_port = PORTD;
-  band_to_pin_tables[3].in_port  = PIND;
+  band_to_pin_tables[3].out_port = 0x2B;
+  band_to_pin_tables[3].in_port  = 0x29;
   band_to_pin_tables[3].pin      = PIND5;
-  band_to_pin_tables[3].regisrt  = DDRD;   
+  band_to_pin_tables[3].regisrt  = 0x2A;   
 
   band_to_pin_tables[4].code_band= BAND_15;
-  band_to_pin_tables[4].out_port = PORTD;
-  band_to_pin_tables[4].in_port  = PIND;
+  band_to_pin_tables[4].out_port = 0x2B;
+  band_to_pin_tables[4].in_port  = 0x29;
   band_to_pin_tables[4].pin      = PIND6;
-  band_to_pin_tables[4].regisrt  = DDRD;   
+  band_to_pin_tables[4].regisrt  = 0x2A;   
 
   band_to_pin_tables[5].code_band= BAND_10;
-  band_to_pin_tables[5].out_port = PORTD;
-  band_to_pin_tables[5].in_port  = PIND;
+  band_to_pin_tables[5].out_port = 0x2B;
+  band_to_pin_tables[5].in_port  = 0x29;
   band_to_pin_tables[5].pin      = PIND7;
-  band_to_pin_tables[5].regisrt  = DDRD;   
+  band_to_pin_tables[5].regisrt  = 0x2A;   
 
 }
 
@@ -54,16 +53,20 @@ void init_out_pins()
 {
 
   int index;
-
+  uint8_t* ptR;
+  
   for(index=0; index<sizeof(band_to_pin_tables); ++index)
+  //for(index=0; index<2; ++index)
   {
     // задаём режим
-    band_to_pin_tables[index].regisrt |= 1 << band_to_pin_tables[index].pin;
-
+    ptR = (uint8_t*) band_to_pin_tables[index].regisrt; 
+    *ptR |= 1 << band_to_pin_tables[index].pin;
+    
     // выставляем Высокий уровень
-    band_to_pin_tables[index].out_port |= ( 1 << band_to_pin_tables[index].pin );
+    ptR = (uint8_t*) band_to_pin_tables[index].out_port;
+    *ptR |= ( 1 << band_to_pin_tables[index].pin );
   }
-
+  
 }
 
 
@@ -89,6 +92,7 @@ void set_band(int band_code)
 
   int index_new_band = -1;
   int index;
+  uint8_t* ptR;
   
   for(index=0; index<sizeof(band_to_pin_tables); ++index)
   {
@@ -105,8 +109,10 @@ void set_band(int band_code)
   int index_current_band = -1;
 
   for(index=0; index<sizeof(band_to_pin_tables); ++index)
-  {
-    if(band_to_pin_tables[band_code].in_port & (1 << band_to_pin_tables[band_code].pin))
+  { 
+    ptR = (uint8_t*)band_to_pin_tables[band_code].in_port;
+    
+    if( *ptR & (1 << band_to_pin_tables[band_code].pin))
     {
       index_current_band = index;
       break;
@@ -116,9 +122,13 @@ void set_band(int band_code)
   if(index_new_band != index_current_band)
   {
     if(index_current_band >= 0)
-      band_to_pin_tables[index_current_band].out_port |= ( 1 << band_to_pin_tables[index_current_band].pin );
+    {
+      ptR = (uint8_t*)band_to_pin_tables[index_current_band].out_port;
+      *ptR |= ( 1 << band_to_pin_tables[index_current_band].pin );
+    }
 
-    band_to_pin_tables[index_new_band].out_port &= ~( 1 << band_to_pin_tables[index_new_band].pin );      
+    ptR = (uint8_t*)band_to_pin_tables[index_new_band].out_port;
+    *ptR &= ~( 1 << band_to_pin_tables[index_new_band].pin );      
   }
 }
 
