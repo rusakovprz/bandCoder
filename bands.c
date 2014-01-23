@@ -72,19 +72,23 @@ void init_out_pins()
 
 void set_band(int band_code)
 {
-  if(band_code == BAND_NO && band_code == BAND_UNKNOWN)
-    return;
+  /*
+    Реле срабатывают от подачи низкого уровня на пины портов ввода вывода.
 
-  if(band_code >= sizeof(band_to_pin_tables))
+    TODO: Добавить в таблицу band_to_pin_tables поле "уровень срабатывания реле",
+          доработать код ниже. 
+          Предварительно нужно оценить необходимость такой "универсальности".
+  */
+
+  if(band_code == BAND_NO || band_code == BAND_UNKNOWN)
     return;
 
   /*
       + вычисляем индекс нового диапазона
       + вычисляем индекс текущего диапазона
       + проверяем индексы на  валидность
-        + если индекс нового диапазона не валиден, выходим из функции
-        + усли нидекс текущего диапазона не валиден (диапазон не включен) приваиваем значение индекса "0",
-          чтобы аклгорит ниже не "развалился" на "выключении" текущего диапазона 
+        + если индекс нового диапазона не валиден - выходим из функции
+        + усли нидекс текущего диапазона не валиден - !!!! 
       + сравниваем индексы
        + если индексы равны, то ничего не делаем
        + если индексы не равны выключаем "текущий" диапазон, и включаем "новый"
@@ -96,7 +100,7 @@ void set_band(int band_code)
   
   for(index=0; index<sizeof(band_to_pin_tables); ++index)
   {
-    if(band_to_pin_tables[index].code_band = band_code)
+    if(band_to_pin_tables[index].code_band == band_code)
     {
       index_new_band = index;
       break;
@@ -110,15 +114,15 @@ void set_band(int band_code)
 
   for(index=0; index<sizeof(band_to_pin_tables); ++index)
   { 
-    ptR = (uint8_t*)band_to_pin_tables[band_code].in_port;
-    
-    if( *ptR & (1 << band_to_pin_tables[band_code].pin))
+    ptR = (uint8_t*)band_to_pin_tables[index].in_port;
+
+    if( !(*ptR & (1 << band_to_pin_tables[index].pin)) )
     {
       index_current_band = index;
       break;
     }
   };
-
+  
   if(index_new_band != index_current_band)
   {
     if(index_current_band >= 0)
