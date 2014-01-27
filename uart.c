@@ -7,7 +7,7 @@
 */
 
 #define max_len_buffer_receiver 40
-#define max_len_buffer_sender 4
+#define max_len_buffer_sender 10
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
@@ -84,41 +84,36 @@ ISR( USART_RX_vect )
   
   char rxbyte = UDR0;
   buffer_receiver[index_item_receiver] = rxbyte;
+  index_item_receiver += 1;
   
   if ( rxbyte == ';')
   {
-    if( PINB & (1 << PB5) )
-    PORTB &= ~( 1 << PB5 );
-  else
-    PORTB |= ( 1 << PB5 );
-
+    index_item_receiver = 0;
 
     // принят пакет, парсим
     if (buffer_receiver[0] == 'I' &&
         buffer_receiver[1] == 'F')
     {
+      inversion_led();
+      
       /* TODO:
         - переписать блок операторов if
         - вынести преобразование строки в число и проверку текущего диапазона 
           в "бесконечный цикл" функции main. 
       */
-      char tmp_string[6];
-      strlcpy(tmp_string, &buffer_receiver[2], 5);   
+      char tmp_string[7];
+      strlcpy(tmp_string, &buffer_receiver[5], 6);   
+      unsigned int frequency = atoi(tmp_string);
 
-      int frequency = atoi(tmp_string);
-
-      if( 1830 > frequency > 1930) set_band(BAND_160);
-      if( 3500 > frequency > 3800) set_band(BAND_80);
-      if( 7000 > frequency > 7100) set_band(BAND_40); 
-      if( 10100 > frequency > 10150) set_band(BAND_30);
-      if( 14000 > frequency > 14350) set_band(BAND_20);
-      if( 18068 > frequency > 18168) set_band(BAND_17); 
-      if( 21000 > frequency > 21450) set_band(BAND_15);
-      if( 24890 > frequency > 24990) set_band(BAND_12);
-      if( 28800 > frequency > 29700) set_band(BAND_10);
+      if( 1830 <= frequency && frequency <= 1930) set_band(BAND_160);
+      if( 3500 <= frequency && frequency <= 3800) set_band(BAND_80);
+      if( 7000 <= frequency && frequency <= 7100) set_band(BAND_40); 
+      if( 14000 <= frequency && frequency <= 14350) set_band(BAND_20);
+      if( 21000 <= frequency && frequency <= 21450) set_band(BAND_15);
+      if( 28800 <= frequency && frequency <= 29700) set_band(BAND_10);
       
     } else return;
-
+    
   } 
     else
     { 
