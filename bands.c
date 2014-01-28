@@ -9,12 +9,16 @@
 
 void init_band_to_pin_tables()
 {
-
+  /*
+    Задействованны только 6 основных любительских диапазонов.
+    Используются пины 2-8 порта D.
+  */
+   
   band_to_pin_tables[0].code_band= BAND_160; // код диапазона
-  band_to_pin_tables[0].out_port = 0x2B;     // порт ввода вывода на котором расположен пин соответствующий диапазону
-  band_to_pin_tables[0].in_port  = 0x29;
+  band_to_pin_tables[0].out_port = 0x2B;     // регистр для записи в порт данных 
+  band_to_pin_tables[0].in_port  = 0x29;     // регистр для чтения данных из порта 
   band_to_pin_tables[0].pin      = PIND2;    // пин соответствующий диапазону
-  band_to_pin_tables[0].regisrt  = 0x2A;   
+  band_to_pin_tables[0].regisrt  = 0x2A;     // регистр направления порта (приём/передача) 
 
   band_to_pin_tables[1].code_band= BAND_80;
   band_to_pin_tables[1].out_port = 0x2B;
@@ -56,7 +60,6 @@ void init_out_pins()
   uint8_t* ptR;
   
   for(index=0; index<sizeof(band_to_pin_tables); ++index)
-  //for(index=0; index<2; ++index)
   {
     // задаём режим
     ptR = (uint8_t*) band_to_pin_tables[index].regisrt; 

@@ -68,6 +68,10 @@ void send_string(const char *in_string)
 }
 
 
+/*
+  Обработчик прерывания по приёму байта через UART. 
+*/
+
 ISR( USART_RX_vect )
 {
   /*
@@ -126,6 +130,10 @@ ISR( USART_RX_vect )
     }
 }
 
+
+/*
+  Обработчик прерывания по освобождению регистра передатчика UART. 
+*/
 
 ISR( USART_UDRE_vect )
 {
