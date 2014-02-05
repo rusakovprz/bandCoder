@@ -233,11 +233,9 @@ def trx_imitator(device, arg2):
     
     if receive_char == ";":
       if receive_command == "IF;": 
-        send_command = "IF" + str(g_s_frequency) + ";"
+        send_command = "IF" + str(g_s_frequency) + "2222233333456789ABCDEEF;"
         ser.write(send_command)
-        #print "send_command = ", send_command
-        #time.sleep(1)
-        
+                
       print receive_command
       receive_command = ""
     
