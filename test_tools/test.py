@@ -174,7 +174,7 @@ class gui(Tk):
 
       self.progress_label["text"]= "Выполнено циклов : " + str(iteration+1) + " из " + str( data_for_load_test[0]["count"] )
 
-    showerror("Выполнено", "Нагрузочное тестирование завершено.")
+    showinfo("Выполнено", "Нагрузочное тестирование завершено.")
     
 
   def set_frequency(self, freq):
