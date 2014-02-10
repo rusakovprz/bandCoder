@@ -9,7 +9,6 @@
 from Tkinter import *
 from tkMessageBox import *
 import time
-import threading
 import thread
 import serial
 
@@ -90,7 +89,7 @@ class gui(Tk):
 
 
     self.button_run_test = Button( self, text = "Начать нагрузочное тестирование",
-                               command = lambda:self.loading_test() )
+                               command =  lambda:thread.start_new_thread( self.loading_test, () ) )
     self.button_run_test.pack()
         
     self.result_text = Label(self)
