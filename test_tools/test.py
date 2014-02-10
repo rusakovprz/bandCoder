@@ -100,11 +100,8 @@ class gui(Tk):
 
     self.set_frequency("00000000000")
 
-    thread.start_new_thread( trx_imitator, ("/dev/ttyS0", "") )
-
-    #thread_serial = threading.Thread(target=trx_imitator, args=("/dev/ttyUSB0", self.s_frequency))
-    #thread_serial.daemon = True
-    #thread_serial.run()
+    self.serial_device = "/dev/ttyS0"
+    thread.start_new_thread( self.trx_imitator, () )
         
 
   def get_progress_text(self, current_value, max_value):
@@ -179,31 +176,28 @@ class gui(Tk):
   def set_frequency(self, freq):
     if len(freq) != 11:
       showerror("Ошибка", "Значение частоты должно состоять из 11 символов.")
-
-    global g_s_frequency      
-    g_s_frequency = freq
+      return
+        
+    self.s_frequency = freq
     
 
-def trx_imitator(device, arg2):
-
-  global g_s_frequency
-
-  ser = serial.Serial( port=device, baudrate=9600,
+  def trx_imitator(self):
+    ser = serial.Serial( self.serial_device, baudrate=9600,
                           parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE,
                           bytesize=serial.EIGHTBITS )
 
-  receive_command = ""
+    receive_command = ""
   
-  while(True):
-    receive_char = ser.read()
-    receive_command += receive_char
+    while(True):
+      receive_char = ser.read()
+      receive_command += receive_char
     
-    if receive_char == ";":
-      if receive_command == "IF;": 
-        send_command = "IF" + str(g_s_frequency) + "2222233333456789ABCDEEF;"
-        ser.write(send_command)
+      if receive_char == ";":
+        if receive_command == "IF;": 
+          send_command = "IF" + str(self.s_frequency) + "2222233333456789ABCDEEF;"
+          ser.write(send_command)
                 
-      receive_command = ""
+        receive_command = ""
     
     
     
