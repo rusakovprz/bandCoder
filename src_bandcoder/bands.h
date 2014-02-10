@@ -12,16 +12,16 @@
 // Коды радиолюбительских КВ диапазонов.
 
 #define BAND_NO   0
-#define BAND_160  1   //  1830 - 1930 кГц
+#define BAND_160  1   //  1810 - 2000 кГц
 #define BAND_80   2   //  3500 - 3800 кГц
-#define BAND_40   3   //  7000 - 7100 кГц 
-#define BAND_30   4   // 10100 - 10150 кГц
+#define BAND_40   3   //  7000 - 7200 кГц 
+#define BAND_30   4   // 
 #define BAND_20   5   // 14000 - 14350 кГц
-#define BAND_17   6   // 18068 - 18168 кГц 
+#define BAND_17   6   //  
 #define BAND_15   7   // 21000 - 21450 кГц
-#define BAND_12   8   // 24890 - 24990 кГц
-#define BAND_10   9   // 28800 - 29700 кГц
-#define BAND_6    10  // 50000 кГц 
+#define BAND_12   8   // 
+#define BAND_10   9   // 28000 - 29700 кГц
+#define BAND_6    10  //  
 
 #define BAND_UNKNOWN  15
 

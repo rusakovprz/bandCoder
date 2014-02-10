@@ -109,12 +109,12 @@ ISR( USART_RX_vect )
       strlcpy(tmp_string, &buffer_receiver[5], 6);   
       unsigned int frequency = atoi(tmp_string);
 
-      if( 1830 <= frequency && frequency <= 1930) set_band(BAND_160);
+      if( 1810 <= frequency && frequency <= 2000) set_band(BAND_160);
       if( 3500 <= frequency && frequency <= 3800) set_band(BAND_80);
-      if( 7000 <= frequency && frequency <= 7100) set_band(BAND_40); 
+      if( 7000 <= frequency && frequency <= 7200) set_band(BAND_40); 
       if( 14000 <= frequency && frequency <= 14350) set_band(BAND_20);
       if( 21000 <= frequency && frequency <= 21450) set_band(BAND_15);
-      if( 28800 <= frequency && frequency <= 29700) set_band(BAND_10);
+      if( 28000 <= frequency && frequency <= 29700) set_band(BAND_10);
       
     } else return;
     
