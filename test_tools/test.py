@@ -94,7 +94,10 @@ class gui(Tk):
         
     self.result_text = Label(self)
     self.result_text.pack()
-        
+
+    self.frequency_label = Label(self, bg="orange")
+    self.frequency_label.pack()    
+
     self.progress_label = Label(self, text=self.get_progress_text(0, 0), bg="light sky blue")
     self.progress_label.pack()
 
@@ -179,6 +182,7 @@ class gui(Tk):
       return
         
     self.s_frequency = freq
+    self.frequency_label["text"] = "Текущая частота = " + self.s_frequency
     
 
   def trx_imitator(self):
