@@ -91,6 +91,12 @@ class gui(Tk):
     self.button_run_test = Button( self, text = "Начать нагрузочное тестирование",
                                command =  lambda:thread.start_new_thread( self.loading_test, () ) )
     self.button_run_test.pack()
+
+    self.var_check_ansver = IntVar()
+    self.var_check_ansver.set(1)
+    self.check_ansver = Checkbutton(self, variable = self.var_check_ansver, 
+                                    text="Ответы на команду IF;")
+    self.check_ansver.pack()
         
     self.result_text = Label(self)
     self.result_text.pack()
@@ -197,7 +203,7 @@ class gui(Tk):
       receive_command += receive_char
     
       if receive_char == ";":
-        if receive_command == "IF;": 
+        if receive_command == "IF;" and self.var_check_ansver.get(): 
           send_command = "IF" + str(self.s_frequency) + "2222233333456789ABCDEEF;"
           ser.write(send_command)
                 
