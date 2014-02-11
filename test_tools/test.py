@@ -92,6 +92,58 @@ class gui(Tk):
                                command =  lambda:thread.start_new_thread( self.loading_test, () ) )
     self.button_run_test.pack()
 
+    self.frame_raw_frequency = LabelFrame(self, text="Ручной ввод частоты")
+    self.frame_raw_frequency.pack()
+
+    #---------------------------------------------------------------
+    self.label1 = Label(self.frame_raw_frequency, text="частота #1")
+    self.label1.grid(row=0, column=0)
+    self.entry1 = Entry(self.frame_raw_frequency )
+    self.entry1.grid(row=0, column=1)
+    self.button1 = Button(self.frame_raw_frequency, text ="Установить", 
+                            command=lambda:self.set_frequency( self.norm_frequency(self.entry1.get()) ))
+    self.button1.grid(row=0, column=2)
+    #---------------------------------------------------------------
+    self.label2 = Label(self.frame_raw_frequency, text="частота #2")
+    self.label2.grid(row=1, column=0)
+    self.entry2 = Entry(self.frame_raw_frequency)
+    self.entry2.grid(row=1, column=1)
+    self.button2 = Button(self.frame_raw_frequency, text ="Установить", 
+                            command=lambda:self.set_frequency( self.norm_frequency(self.entry2.get()) ))
+    self.button2.grid(row=1, column=2)
+    #---------------------------------------------------------------
+    self.label3 = Label(self.frame_raw_frequency, text="частота #3")
+    self.label3.grid(row=2, column=0)
+    self.entry3 = Entry(self.frame_raw_frequency)
+    self.entry3.grid(row=2, column=1)
+    self.button3 = Button(self.frame_raw_frequency, text ="Установить", 
+                            command=lambda:self.set_frequency( self.norm_frequency(self.entry3.get()) ))
+    self.button3.grid(row=2, column=2)
+    #---------------------------------------------------------------
+    self.label4 = Label(self.frame_raw_frequency, text="частота #4")
+    self.label4.grid(row=3, column=0)
+    self.entry4 = Entry(self.frame_raw_frequency)
+    self.entry4.grid(row=3, column=1)
+    self.button4 = Button(self.frame_raw_frequency, text ="Установить", 
+                            command=lambda:self.set_frequency( self.norm_frequency(self.entry4.get()) ))
+    self.button4.grid(row=3, column=2)
+    #---------------------------------------------------------------
+    self.label5 = Label(self.frame_raw_frequency, text="частота #5")
+    self.label5.grid(row=4, column=0)
+    self.entry5 = Entry(self.frame_raw_frequency)
+    self.entry5.grid(row=4, column=1)
+    self.button5 = Button(self.frame_raw_frequency, text ="Установить", 
+                            command=lambda:self.set_frequency( self.norm_frequency(self.entry5.get()) ))
+    self.button5.grid(row=4, column=2)
+    #---------------------------------------------------------------
+    self.label6 = Label(self.frame_raw_frequency, text="частота #6")
+    self.label6.grid(row=5, column=0)
+    self.entry6 = Entry(self.frame_raw_frequency)
+    self.entry6.grid(row=5, column=1)
+    self.button6 = Button(self.frame_raw_frequency, text ="Установить", 
+                            command=lambda:self.set_frequency( self.norm_frequency(self.entry6.get()) ))
+    self.button6.grid(row=5, column=2)
+
     self.var_check_ansver = IntVar()
     self.var_check_ansver.set(1)
     self.check_ansver = Checkbutton(self, variable = self.var_check_ansver, 
@@ -111,6 +163,20 @@ class gui(Tk):
 
     self.serial_device = "/dev/ttyS0"
     thread.start_new_thread( self.trx_imitator, () )
+
+
+  @staticmethod
+  def norm_frequency(freq):
+    """
+      Нормализация частоты - приводит строку к длинне в 11 знаков.
+    """
+    if len(freq) > 11:
+      return freq[-11:]
+
+    while len(freq) < 11:
+      freq = "0" + freq
+
+    return freq
         
 
   def get_progress_text(self, current_value, max_value):
@@ -138,7 +204,6 @@ class gui(Tk):
     """
       Автоматизированный тест.
     """ 
-
     len_list_test_case = len(data_for_test_script)
     successful = 0
     failure = 0
@@ -165,9 +230,6 @@ class gui(Tk):
     """
       'Нагрузочный' тест. Разработка не завершена.
       В текущей реализации используется как 'двухкратный прогон' по всем диапазонам 
-       
-      TODO: 'Вынести' в отдельный поток.
-      
     """
     self.progress_label["text"]= "Выполнено циклов : 0 из " + str( data_for_load_test[0]["count"] )
 
