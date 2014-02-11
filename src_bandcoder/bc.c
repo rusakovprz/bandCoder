@@ -41,6 +41,7 @@ void init_timer1()
 ISR( TIMER1_OVF_vect )
 {
   TCNT1 = TCNT1_INIT; //выставляем начальное значение TCNT1.
+  check_count_request();
   send_string("IF;");
 }
 

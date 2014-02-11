@@ -27,6 +27,9 @@ char buffer_sender[max_len_buffer_sender];
 // индекс  очередного элемента передающего буфера 
 int index_item_sender;
 
+// счётсик запросов IF;
+int coint_request = 0;
+
 
 void init_uart()
 {
@@ -93,6 +96,7 @@ ISR( USART_RX_vect )
   if ( rxbyte == ';')
   {
     index_item_receiver = 0;
+    coint_request = 0;
 
     // принят пакет, парсим
     if (buffer_receiver[0] == 'I' &&
@@ -149,4 +153,20 @@ ISR( USART_UDRE_vect )
     UDR0 = buffer_sender[index_item_sender++];
 }
 
+
+/*
+  Если чсётчик запросов превышает заданное значение,
+  значит трансивер не отвечает, "освобождаем" диапазоны. 
+*/
+
+void check_count_request()
+{
+  coint_request++;
+  
+  if(coint_request >= 3)
+  {
+    set_band(BAND_NO);
+    coint_request = 0;
+  }
+}
 
