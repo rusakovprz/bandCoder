@@ -32,7 +32,7 @@ void init_uart()
 {
   
   // Для частоты микроконтроллера 16МГц и скорости 9600 
-  // в регистр скорости следует записать значение 129. 
+  // в регистр скорости следует записать значение 103. 
   UBRR0L = 103;
   UBRR0H = 103 >> 8;
   
@@ -110,24 +110,32 @@ ISR( USART_RX_vect )
       unsigned int frequency = atoi(tmp_string);
 
       if( 1810 <= frequency && frequency <= 2000) set_band(BAND_160);
+      else 
       if( 3500 <= frequency && frequency <= 3800) set_band(BAND_80);
-      if( 7000 <= frequency && frequency <= 7200) set_band(BAND_40); 
+      else
+      if( 7000 <= frequency && frequency <= 7200) set_band(BAND_40);
+      else
       if( 14000 <= frequency && frequency <= 14350) set_band(BAND_20);
+      else
       if( 21000 <= frequency && frequency <= 21450) set_band(BAND_15);
+      else
       if( 28000 <= frequency && frequency <= 29700) set_band(BAND_10);
-      
-    } else return;
-    
+      else
+        set_band(BAND_NO);
+
+      return;
+            
+    } else 
+          return;
+          
   } 
     else
-    { 
       // проверяем на переполнение буфера  
       if (index_item_receiver >= max_len_buffer_receiver)
       {
         index_item_receiver = 0;
         return;
-      }
-    }
+      }   
 }
 
 
