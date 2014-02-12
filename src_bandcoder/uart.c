@@ -109,9 +109,13 @@ ISR( USART_RX_vect )
         - вынести преобразование строки в число и проверку текущего диапазона 
           в "бесконечный цикл" функции main. 
       */
-      char tmp_string[7];
-      strlcpy(tmp_string, &buffer_receiver[5], 6);   
-      unsigned int frequency = atoi(tmp_string);
+      char s_frequency[7];
+      strlcpy(s_frequency, &buffer_receiver[5], 6);   
+
+      if( check_numeric_string(s_frequency) < 0)
+        return;
+        
+      unsigned int frequency = atoi(s_frequency);
 
       if( 1810 <= frequency && frequency <= 2000) set_band(BAND_160);
       else 
@@ -168,5 +172,23 @@ void check_count_request()
     set_band(BAND_NO);
     coint_request = 0;
   }
+}
+
+
+/*
+  Возвращает 0 - если все символы строки числовые,
+  Возвращает -1 - если хотябы один символ в строке не числовой.
+*/
+
+int check_numeric_string(char* s_frequency)
+{
+  int index;
+  for(index = 0; index<strlen(s_frequency); ++index )
+  {
+    if( s_frequency[index] < 0x30 || 0x39 < s_frequency[index] )
+      return -1;
+  }
+
+  return 0;
 }
 
