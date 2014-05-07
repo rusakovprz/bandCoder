@@ -12,3 +12,5 @@ bandCoder
 - соответсвие пинов портов ввода-вывода определяется программно (file: bands.c, function void init_band_to_pin_tables() ).
 
 Аппаратная часть, описана [здесь](https://docs.google.com/document/d/1nFi6O7A-nFe-ZUlmCB5rauzhndboRLULFgUdaN8hMWo/edit).
+
+Принципиальные электрические схемы программатора, соответствующего используемым опциям avrdude (см. Makefile, цель prog) приведены [здесь в PNG формате](https://drive.google.com/file/d/0B4wqi_MPMXo2TXZMNVJfRkFrb2s/edit?usp=sharing) и [здесь в SCH формате] (https://drive.google.com/file/d/0B4wqi_MPMXo2ZUJEeW1UV3ZqS1k/edit?usp=sharing), которая нарисована в [gEDA](http://www.geda-project.org/).
