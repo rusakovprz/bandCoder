@@ -128,6 +128,14 @@ ISR( USART_RX_vect )
       if( 21000 <= frequency && frequency <= 21450) set_band(BAND_15);
       else
       if( 28000 <= frequency && frequency <= 29700) set_band(BAND_10);
+      
+      else  //WARC bands
+      if( 10100 <= frequency && frequency <= 10150) set_band(BAND_30);
+      else
+      if( 18068 <= frequency && frequency <= 18168) set_band(BAND_17);
+      else
+      if( 24890 <= frequency && frequency <= 25140) set_band(BAND_12);
+            
       else
         set_band(BAND_NO);
 

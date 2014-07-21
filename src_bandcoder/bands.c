@@ -50,6 +50,26 @@ void init_band_to_pin_tables()
   band_to_pin_tables[5].pin      = PIND7;
   band_to_pin_tables[5].regisrt  = 0x2A;   
 
+// WARC bands
+
+  band_to_pin_tables[6].code_band= BAND_30;
+  band_to_pin_tables[6].out_port = 0x25;
+  band_to_pin_tables[6].in_port  = 0x23;
+  band_to_pin_tables[6].pin      = PINB0;
+  band_to_pin_tables[6].regisrt  = 0x24;   
+
+  band_to_pin_tables[7].code_band= BAND_17;
+  band_to_pin_tables[7].out_port = 0x25;
+  band_to_pin_tables[7].in_port  = 0x23;
+  band_to_pin_tables[7].pin      = PINB1;
+  band_to_pin_tables[7].regisrt  = 0x24;   
+
+  band_to_pin_tables[8].code_band= BAND_12;
+  band_to_pin_tables[8].out_port = 0x25;
+  band_to_pin_tables[8].in_port  = 0x23;
+  band_to_pin_tables[8].pin      = PINB2;
+  band_to_pin_tables[8].regisrt  = 0x24;   
+
 }
 
 
