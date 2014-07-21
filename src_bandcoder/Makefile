@@ -5,6 +5,11 @@ endif
 
 MMCU = -mmcu=atmega328p
 
+# OPTIONS - флаги директив препроцоссора
+# OUTPUT_LEVEL_UP_ON - Включение реле "ВЫСОКИМ" уровнем (лог. 1)
+OPTIONS = -DOUTPUT_LEVEL_UP_ON
+
+
 bc.hex: obj_all.o 
 	avr-objcopy -j .text -j .data -O ihex obj_all.o bc.hex
 
@@ -15,7 +20,7 @@ bc.o: bc.c
 	avr-gcc -c $(MMCU) -Os bc.c -o bc.o 
 
 bands.o: bands.c bands.h 
-	avr-gcc -c $(MMCU) -Os bands.c -o bands.o
+	avr-gcc -c $(MMCU) $(OPTIONS) -Os bands.c -o bands.o
 
 uart.o: uart.c uart.h
 	avr-gcc -c $(MMCU) -Os uart.c -o uart.o

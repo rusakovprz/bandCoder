@@ -65,9 +65,13 @@ void init_out_pins()
     ptR = (uint8_t*) band_to_pin_tables[index].regisrt; 
     *ptR |= 1 << band_to_pin_tables[index].pin;
     
-    // выставляем Высокий уровень
+    // выставляем уровень соответствующий режиму "реле выключено"
     ptR = (uint8_t*) band_to_pin_tables[index].out_port;
+#ifndef OUTPUT_LEVEL_UP_ON
     *ptR |= ( 1 << band_to_pin_tables[index].pin );
+#else
+    *ptR &= ~( 1 << band_to_pin_tables[index].pin );
+#endif
   }
   
 }
@@ -75,16 +79,6 @@ void init_out_pins()
 
 void set_band(int band_code)
 {
-  /*
-    Реле срабатывают от подачи низкого уровня на пины портов ввода вывода.
-
-    TODO: 1) Добавить в таблицу band_to_pin_tables поле "уровень срабатывания реле",
-          доработать код ниже. 
-          Предварительно нужно оценить необходимость такой "универсальности".
-          2) Провести декомпозицию функции init_out_pins() на:
-             - направление ввода вывода пинов
-             - установка логических уровней в "исходном сотоянии" 
-  */
 
   if(band_code == BAND_NO)
     init_out_pins();
@@ -125,7 +119,11 @@ void set_band(int band_code)
   { 
     ptR = (uint8_t*)band_to_pin_tables[index].in_port;
 
+#ifndef OUTPUT_LEVEL_UP_ON
     if( !(*ptR & (1 << band_to_pin_tables[index].pin)) )
+#else
+    if( *ptR & (1 << band_to_pin_tables[index].pin) )
+#endif
     {
       index_current_band = index;
       break;
@@ -137,11 +135,19 @@ void set_band(int band_code)
     if(index_current_band >= 0)
     {
       ptR = (uint8_t*)band_to_pin_tables[index_current_band].out_port;
+#ifndef OUTPUT_LEVEL_UP_ON
       *ptR |= ( 1 << band_to_pin_tables[index_current_band].pin );
+#else
+      *ptR &= ~( 1 << band_to_pin_tables[index_current_band].pin );
+#endif
     }
 
     ptR = (uint8_t*)band_to_pin_tables[index_new_band].out_port;
+#ifndef OUTPUT_LEVEL_UP_ON
     *ptR &= ~( 1 << band_to_pin_tables[index_new_band].pin );      
+#else
+    *ptR |= ( 1 << band_to_pin_tables[index_new_band].pin );
+#endif
   }
 }
 
