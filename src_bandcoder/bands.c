@@ -73,13 +73,22 @@ void init_band_to_pin_tables()
 }
 
 
+// Возвращает длинну таблицы
+// cоответствие диапазонов линиям портов ввода вывода
+
+inline int len_band_to_pin_tables()
+{
+  return sizeof(band_to_pin_tables)/sizeof(struct band_to_pin);
+}
+
+
 void init_out_pins()
 {
 
   int index;
   uint8_t* ptR;
   
-  for(index=0; index<sizeof(band_to_pin_tables); ++index)
+  for(index=0; index<len_band_to_pin_tables(); ++index)
   {
     // задаём режим
     ptR = (uint8_t*) band_to_pin_tables[index].regisrt; 
@@ -121,21 +130,21 @@ void set_band(int band_code)
   int index;
   uint8_t* ptR;
   
-  for(index=0; index<sizeof(band_to_pin_tables); ++index)
+  for(index=0; index<index<sizeof(band_to_pin_tables); ++index)
   {
     if(band_to_pin_tables[index].code_band == band_code)
     {
       index_new_band = index;
       break;
     }
-  };
+  }
 
   if(index_new_band < 0)
     return;
 
   int index_current_band = -1;
 
-  for(index=0; index<sizeof(band_to_pin_tables); ++index)
+  for(index=0; index<index<sizeof(band_to_pin_tables); ++index)
   { 
     ptR = (uint8_t*)band_to_pin_tables[index].in_port;
 
@@ -148,7 +157,7 @@ void set_band(int band_code)
       index_current_band = index;
       break;
     }
-  };
+  }
   
   if(index_new_band != index_current_band)
   {
