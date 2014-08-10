@@ -12,10 +12,17 @@ import time
 import thread
 import serial
 
+
+#lps = 0
+#ups = 0
+
+lps = 50
+ups = 50
+
 """
   'Сценарий' тестирования, набор данных для тестирования.
 
-    freq - 'текущая' частота
+    freq - 'текущая' частота (kHz)
     output_code - бинарный код соответсвующий 'текщему' диапазону
                   (заложен на будующее для считывания с устройства 'обратной связи')
     dialog - текст выводимый в диалоговом окне
@@ -23,52 +30,52 @@ import serial
 
 data_for_test_script = [
 
-  {"freq":"00003500000", "output_code":0x02, "dialog":"Включен диапазон 3.5 мГц"},     #1
-  {"freq":"00001809999", "output_code":0x00, "dialog":"Ни один диапазон не включен."},  
-  {"freq":"00001810000", "output_code":0x00, "dialog":"Включен диапазон 1.8 мГц"},
-  {"freq":"00003800000", "output_code":0x02, "dialog":"Включен диапазон 3.5 мГц"},
-  {"freq":"00002000000", "output_code":0x00, "dialog":"Включен диапазон 1.8 мГц"},     #5
-  {"freq":"00003600000", "output_code":0x02, "dialog":"Включен диапазон 3.5 мГц"}, 
-  {"freq":"00002001000", "output_code":0x00, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00007000000", "output_code":0x04, "dialog":"Включен диапазон 7.0 мГц."},
-  {"freq":"00003499999", "output_code":0x02, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00014000000", "output_code":0x08, "dialog":"Включен диапазон 14.0 мГц"},    #10
-  {"freq":"00003801000", "output_code":0x02, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00007100000", "output_code":0x04, "dialog":"Включен диапазон 7.0 мГц."},
-  {"freq":"00014350000", "output_code":0x08, "dialog":"Включен диапазон 14.0 мГц"},
-  {"freq":"00006999999", "output_code":0x04, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00021100000", "output_code":0x10, "dialog":"Включен диапазон 21.0 мГц"},    #15
-  {"freq":"00007201000", "output_code":0x04, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00029700000", "output_code":0x20, "dialog":"Включен диапазон 28.0 мГц"},
-  {"freq":"00013999999", "output_code":0x08, "dialog":"Ни один диапазон не включен."},  
-  {"freq":"00021450000", "output_code":0x10, "dialog":"Включен диапазон 21.0 мГц"},
-  {"freq":"00014351000", "output_code":0x08, "dialog":"Ни один диапазон не включен."}, #20
-  {"freq":"00002000000", "output_code":0x01, "dialog":"Включен диапазон 1.8 мГц"},
-  {"freq":"00020999999", "output_code":0x10, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00007040000", "output_code":0x04, "dialog":"Включен диапазон 7.0 мГц."},
-  {"freq":"00021451000", "output_code":0x10, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00027999999", "output_code":0x20, "dialog":"Ни один диапазон не включен."}, #25
-  {"freq":"00029700000", "output_code":0x20, "dialog":"Включен диапазон 28.0 мГц"},
-  {"freq":"00014200000", "output_code":0x08, "dialog":"Включен диапазон 14.0 мГц"},
-  {"freq":"00029701000", "output_code":0x20, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00021100000", "output_code":0x10, "dialog":"Включен диапазон 21.0 мГц"},
-  {"freq":"00029000000", "output_code":0x20, "dialog":"Включен диапазон 28.0 мГц"},    #30
+  {"freq":3500-lps,  "output_code":0x02, "dialog":"Включен диапазон 3.5 мГц"},     #1
+  {"freq":1809-lps,  "output_code":0x00, "dialog":"Ни один диапазон не включен."},  
+  {"freq":1810-lps,  "output_code":0x00, "dialog":"Включен диапазон 1.8 мГц"},
+  {"freq":3800+ups,  "output_code":0x02, "dialog":"Включен диапазон 3.5 мГц"},
+  {"freq":2000+ups,  "output_code":0x00, "dialog":"Включен диапазон 1.8 мГц"},     #5
+  {"freq":3600,  "output_code":0x02, "dialog":"Включен диапазон 3.5 мГц"}, 
+  {"freq":2001+ups,  "output_code":0x00, "dialog":"Ни один диапазон не включен."},
+  {"freq":7000-lps,  "output_code":0x04, "dialog":"Включен диапазон 7.0 мГц."},
+  {"freq":3499-lps,  "output_code":0x02, "dialog":"Ни один диапазон не включен."},
+  {"freq":14000-lps, "output_code":0x08, "dialog":"Включен диапазон 14.0 мГц"},    #10
+  {"freq":3801+ups,  "output_code":0x02, "dialog":"Ни один диапазон не включен."},
+  {"freq":7100,  "output_code":0x04, "dialog":"Включен диапазон 7.0 мГц."},
+  {"freq":14350+ups,  "output_code":0x08, "dialog":"Включен диапазон 14.0 мГц"},
+  {"freq":6999-lps,  "output_code":0x04, "dialog":"Ни один диапазон не включен."},
+  {"freq":21100-lps, "output_code":0x10, "dialog":"Включен диапазон 21.0 мГц"},    #15
+  {"freq":7201+ups,  "output_code":0x04, "dialog":"Ни один диапазон не включен."},
+  {"freq":29700+ups, "output_code":0x20, "dialog":"Включен диапазон 28.0 мГц"},
+  {"freq":13999-lps, "output_code":0x08, "dialog":"Ни один диапазон не включен."},  
+  {"freq":21450+ups, "output_code":0x10, "dialog":"Включен диапазон 21.0 мГц"},
+  {"freq":14351+ups, "output_code":0x08, "dialog":"Ни один диапазон не включен."}, #20
+  {"freq":2000+ups,  "output_code":0x01, "dialog":"Включен диапазон 1.8 мГц"},
+  {"freq":20999-lps, "output_code":0x10, "dialog":"Ни один диапазон не включен."},
+  {"freq":7040,  "output_code":0x04, "dialog":"Включен диапазон 7.0 мГц."},
+  {"freq":21451+ups, "output_code":0x10, "dialog":"Ни один диапазон не включен."},
+  {"freq":27999-lps, "output_code":0x20, "dialog":"Ни один диапазон не включен."}, #25
+  {"freq":29700+ups, "output_code":0x20, "dialog":"Включен диапазон 28.0 мГц"},
+  {"freq":14200, "output_code":0x08, "dialog":"Включен диапазон 14.0 мГц"},
+  {"freq":29701+ups, "output_code":0x20, "dialog":"Ни один диапазон не включен."},
+  {"freq":21100, "output_code":0x10, "dialog":"Включен диапазон 21.0 мГц"},
+  {"freq":29000, "output_code":0x20, "dialog":"Включен диапазон 28.0 мГц"},    #30
 
-  {"freq":"00010099999", "output_code":0x00, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00010100000", "output_code":0x00, "dialog":"Включен диапазон 10.0 мГц"},  
-  {"freq":"00010151000", "output_code":0x00, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00010150000", "output_code":0x00, "dialog":"Включен диапазон 10.0 мГц"},    #34
+  {"freq":10099-lps, "output_code":0x00, "dialog":"Ни один диапазон не включен."},
+  {"freq":10100-lps, "output_code":0x00, "dialog":"Включен диапазон 10.0 мГц"},  
+  {"freq":10151+ups, "output_code":0x00, "dialog":"Ни один диапазон не включен."},
+  {"freq":10150+ups, "output_code":0x00, "dialog":"Включен диапазон 10.0 мГц"},    #34
   
-  {"freq":"00018067999", "output_code":0x00, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00018068000", "output_code":0x00, "dialog":"Включен диапазон 18.0 мГц"},
-  {"freq":"00018169000", "output_code":0x00, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00018168000", "output_code":0x00, "dialog":"Включен диапазон 18.0 мГц"},   #38
+  {"freq":18067-lps, "output_code":0x00, "dialog":"Ни один диапазон не включен."},
+  {"freq":18068-lps, "output_code":0x00, "dialog":"Включен диапазон 18.0 мГц"},
+  {"freq":18169+ups, "output_code":0x00, "dialog":"Ни один диапазон не включен."},
+  {"freq":18168+ups, "output_code":0x00, "dialog":"Включен диапазон 18.0 мГц"},    #38
 
   
-  {"freq":"00024889999", "output_code":0x00, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00024890000", "output_code":0x00, "dialog":"Включен диапазон 24.0 мГц"},
-  {"freq":"00024991000", "output_code":0x00, "dialog":"Ни один диапазон не включен."},
-  {"freq":"00024990000", "output_code":0x00, "dialog":"Включен диапазон 24.0 мГц"}    #42
+  {"freq":24889-lps, "output_code":0x00, "dialog":"Ни один диапазон не включен."},
+  {"freq":24890-lps, "output_code":0x00, "dialog":"Включен диапазон 24.0 мГц"},
+  {"freq":24991+ups, "output_code":0x00, "dialog":"Ни один диапазон не включен."},
+  {"freq":24990+ups, "output_code":0x00, "dialog":"Включен диапазон 24.0 мГц"}    #42
 ] 
 
 
@@ -98,11 +105,10 @@ class gui(Tk):
     
     self.title("Автоматический тест декодера диапазонов для TS-590")
     #self.geometry('500x200')
-    
-    self.button_run_test = Button( self, text = "Начать автоматизированное тестирование",
-                               command = lambda:self.run_test() )
-    self.button_run_test.pack()
 
+    self.button_run_test = Button( self, text = "Начать автоматизированное тестирование",
+                               command = lambda:self.run_test(data_for_test_script) )
+    self.button_run_test.pack()
 
     self.button_run_test = Button( self, text = "Начать нагрузочное тестирование",
                                command =  lambda:thread.start_new_thread( self.loading_test, () ) )
@@ -216,18 +222,19 @@ class gui(Tk):
     Всего тестов    = " + str(total)
 
    
-  def run_test(self):
+  def run_test(self, test_script):
     """
       Автоматизированный тест.
     """ 
-    len_list_test_case = len(data_for_test_script)
+    
+    len_list_test_case = len(test_script)
     successful = 0
     failure = 0
     self.progress_label["text"]=self.get_progress_text(0, len_list_test_case)
         
     for index, item in enumerate(data_for_test_script):
 
-      self.set_frequency( item["freq"] )
+      self.set_frequency( self.norm_frequency(str(item["freq"]*1000)) )
       
       ret = askyesno("Тестовый случай #" + str(index+1),
                      "Вы наблюдаете следующее состояние?\n\n" + item["dialog"])
