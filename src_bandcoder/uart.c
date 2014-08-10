@@ -6,6 +6,15 @@
   
 */
 
+
+#ifndef LPS 
+#define LPS 0
+#endif
+
+#ifndef UPS 
+#define UPS 0
+#endif
+
 #define max_len_buffer_receiver 40
 #define max_len_buffer_sender 10
 
@@ -117,24 +126,24 @@ ISR( USART_RX_vect )
         
       unsigned int frequency = atoi(s_frequency);
 
-      if( 1810 <= frequency && frequency <= 2000) set_band(BAND_160);
+      if( 1810-LPS <= frequency && frequency <= 2000+UPS) set_band(BAND_160);
       else 
-      if( 3500 <= frequency && frequency <= 3800) set_band(BAND_80);
+      if( 3500-LPS <= frequency && frequency <= 3800+UPS) set_band(BAND_80);
       else
-      if( 7000 <= frequency && frequency <= 7200) set_band(BAND_40);
+      if( 7000-LPS <= frequency && frequency <= 7200+UPS) set_band(BAND_40);
       else
-      if( 14000 <= frequency && frequency <= 14350) set_band(BAND_20);
+      if( 14000-LPS <= frequency && frequency <= 14350+UPS) set_band(BAND_20);
       else
-      if( 21000 <= frequency && frequency <= 21450) set_band(BAND_15);
+      if( 21000-LPS <= frequency && frequency <= 21450+UPS) set_band(BAND_15);
       else
-      if( 28000 <= frequency && frequency <= 29700) set_band(BAND_10);
+      if( 28000-LPS <= frequency && frequency <= 29700+UPS) set_band(BAND_10);
       
       else  //WARC bands
-      if( 10100 <= frequency && frequency <= 10150) set_band(BAND_30);
+      if( 10100-LPS <= frequency && frequency <= 10150+UPS) set_band(BAND_30);
       else
-      if( 18068 <= frequency && frequency <= 18168) set_band(BAND_17);
+      if( 18068-LPS <= frequency && frequency <= 18168+UPS) set_band(BAND_17);
       else
-      if( 24890 <= frequency && frequency <= 24990) set_band(BAND_12);
+      if( 24890-LPS <= frequency && frequency <= 24990+UPS) set_band(BAND_12);
             
       else
         set_band(BAND_NO);

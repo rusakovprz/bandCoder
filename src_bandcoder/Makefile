@@ -1,13 +1,21 @@
 
 ifndef SERIAL_PORT
-SERIAL_PORT = /dev/ttyS0
+SERIAL_PORT = /dev/ttyUSB0
 endif
 
 MMCU = -mmcu=atmega328p
 
 # OPTIONS - флаги директив препроцоссора
+#
 # OUTPUT_LEVEL_UP_ON - Включение реле "ВЫСОКИМ" уровнем (лог. 1)
-OPTIONS = -DOUTPUT_LEVEL_UP_ON
+#  
+# Защитные полосы 
+# LPS  - Lower Protective Strip
+# UPS  - Upper Protective Strip
+
+OPTIONS = -DOUTPUT_LEVEL_UP_ON -DLPS=50 -DUPS=50 
+
+
 
 
 bc.hex: obj_all.o 
@@ -23,7 +31,7 @@ bands.o: bands.c bands.h
 	avr-gcc -c $(MMCU) $(OPTIONS) -Os bands.c -o bands.o
 
 uart.o: uart.c uart.h
-	avr-gcc -c $(MMCU) -Os uart.c -o uart.o
+	avr-gcc -c $(MMCU) $(OPTIONS) -Os uart.c -o uart.o
 
 	
 clean:
