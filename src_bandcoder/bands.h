@@ -19,7 +19,7 @@
 #define BAND_20   5   // 14000 - 14350 кГц
 #define BAND_17   6   // 18068 - 18168 кГц
 #define BAND_15   7   // 21000 - 21450 кГц
-#define BAND_12   8   // 24890 - 25140 кГц
+#define BAND_12   8   // 24890 - 24990 кГц
 #define BAND_10   9   // 28000 - 29700 кГц
 #define BAND_6    10  //  
 

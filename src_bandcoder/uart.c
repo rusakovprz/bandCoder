@@ -134,7 +134,7 @@ ISR( USART_RX_vect )
       else
       if( 18068 <= frequency && frequency <= 18168) set_band(BAND_17);
       else
-      if( 24890 <= frequency && frequency <= 25140) set_band(BAND_12);
+      if( 24890 <= frequency && frequency <= 24990) set_band(BAND_12);
             
       else
         set_band(BAND_NO);
